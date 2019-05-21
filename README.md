@@ -1,0 +1,1 @@
+# logstash-jwt-filter-plugin
