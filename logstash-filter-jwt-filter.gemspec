@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description   = 'TODO: Write a longer description or delete this line.'
   s.homepage      = 'TODO: Put your plugin''s website or public repo URL here.'
   s.authors       = ['Bharat Raj Arutla']
-  s.email         = 'v-bharat.a@turvo.com'
+  s.email         = 'bharatraj.arutla@gmail.com'
   s.require_paths = ['lib']
 
   # Files
@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
   # Gem dependencies
   s.add_runtime_dependency "logstash-core-plugin-api", "~> 2.0"
   s.add_development_dependency 'logstash-devutils'
+  s.add_development_dependency 'jwt',"1.5.6"
 end
