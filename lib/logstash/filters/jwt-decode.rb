@@ -6,7 +6,7 @@ require "jwt"
 # message field with whatever you specify in the configuration.
 #
 # It is only intended to be used as an .
-class LogStash::Filters::JwtFilter < LogStash::Filters::Base
+class LogStash::Filters::JWTDecode < LogStash::Filters::Base
 
   # Setting the config_name here is required. This is how you
   # configure this filter from your Logstash config.
@@ -17,7 +17,7 @@ class LogStash::Filters::JwtFilter < LogStash::Filters::Base
   #   }
   # }
   #
-  config_name "jwt-filter"
+  config_name "jwt-decode"
 
   # Replace the message with this value.
   config :jwt_token_field, :validate => :string, :required => true
@@ -31,7 +31,7 @@ class LogStash::Filters::JwtFilter < LogStash::Filters::Base
   def register
     # Add instance variables
     if not ['NONE', 'HMAC', 'RSASSA', 'ECDSA'].include? @signature_alg
-      raise LogStash::ConfigurationError, "JwtFilter plugin: Invalid signature_alg '#{@signature_alg}' must be one of NONE, HMAC, RSASSA and ECDSA"
+      raise LogStash::ConfigurationError, "JWTDecode plugin: Invalid signature_alg '#{@signature_alg}' must be one of NONE, HMAC, RSASSA and ECDSA"
     end  
   end # def register
 
@@ -43,4 +43,4 @@ class LogStash::Filters::JwtFilter < LogStash::Filters::Base
     # filter_matched should go in the last line of our successful code
     filter_matched(event)
   end # def filter
-end # class LogStash::Filters::JwtFilter
+end # class LogStash::Filters::JWTDecode

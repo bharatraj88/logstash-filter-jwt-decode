@@ -1,12 +1,12 @@
 # encoding: utf-8
 require_relative '../spec_helper'
-require "logstash/filters/jwt-filter"
+require "logstash/filters/jwt-decode"
 
-describe LogStash::Filters::JwtFilter do
+describe LogStash::Filters::JWTDecode do
   describe "Set to Hello World" do
     let(:config) do <<-CONFIG
       filter {
-        jwt-filter {
+        jwt-decode {
           message => "Hello World"
         }
       }
