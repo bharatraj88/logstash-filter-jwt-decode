@@ -20,7 +20,7 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
   config_name "jwt-decode"
 
   # Replace the message with this value.
-  config :jwt_token_field, :validate => :string, :required => true
+  config :match, :validate => :string, :required => true
   # Supported Algorithms NONE, HMAC, RSASSA and ECDSA
   config :signature_alg, :validate => :string, :required => false, :default => "NONE"
   config :key, :validate => :string, :required => false, :default => nil
@@ -37,9 +37,8 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
 
   public
   def filter(event)
-
-    decoded_token = JWT.decode event.get(@jwt_token_field), @key, true, {algorithm: @signature_alg}
-    @extract_fields.each { |k, v| event[:k] = decoded_token[:v] }
+    decoded_token = JWT.decode event.get(@match), @key, false, {algorithm: @signature_alg}    
+    @extract_fields.each { |k, v| event.set(:k , decoded_token[:v]) }
     # filter_matched should go in the last line of our successful code
     filter_matched(event)
   end # def filter
