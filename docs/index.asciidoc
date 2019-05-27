@@ -1,4 +1,4 @@
-:plugin: example
+:plugin: jwt-decode
 :type: filter
 // Update header with plugin name
 
@@ -21,7 +21,23 @@ include::{include_path}/plugin_header.asciidoc[]
 
 ==== Description
 
-Add plugin description here
+This jwt-decode filter plugin allows you to decode JWT token present in your event, extract the varaibles which you need and add it to event
+
+Example:
+[source,ruby]
+-----
+filter {
+    jwt-decode {
+        match => "token"
+        "extract_fields" => {"user_id" => "user.id", "user_name" => "user.name"}
+    }
+
+    jwt-decode {
+        match => "token"
+        "extract_fields" => {"name" => "name"}
+    }
+}
+-----
 
 // Format anchors and links to support generated ids for versioning
 // Sample anchor: [id="plugins-{type}s-{plugin}-setting_name"]
@@ -33,52 +49,59 @@ Add plugin description here
 [cols="<,<,<",options="header",]
 |=======================================================================
 |Setting |Input type|Required
-| <<plugins-{type}s-{plugin}-a_setting_name>> |<<boolean,boolean>>|No
-| <<plugins-{type}s-{plugin}-another_setting_name>> |<<hash,hash>>|No
-| <<plugins-{type}s-{plugin}-setting_name_3>> |<<string,string>>|No
-| <<plugins-{type}s-{plugin}-setting_name_4>> |<<number,number>>|No
-| <<plugins-{type}s-{plugin}-setting_name_5>> |<<array,array>>|No
+| <<plugins-{type}s-{plugin}-match>> |<<string,string>>|Yes
+| <<plugins-{type}s-{plugin}-extract_fields>> |<<hash,hash>>|Yes
+| <<plugins-{type}s-{plugin}-key>> |<<string,string>>|No
+| <<plugins-{type}s-{plugin}-signature_alg>> |<<string,string>>|No
 |=======================================================================
 
-[id="plugins-{type}s-{plugin}-a_setting_name"]
-===== `a_setting_name` 
-
-  * Value type is <<boolean,boolean>>
-  * Default value is `true`
-
-Add description here
-
-[id="plugins-{type}s-{plugin}-another_setting_name"]
-===== `another_setting_name` 
-
-  * Value type is <<hash,hash>>
-  * Default value is `{}`
-
-Add description here
-
-[id="plugins-{type}s-{plugin}-setting_name_3"]
-===== `setting_name_3` 
+[id="plugins-{type}s-{plugin}-match"]
+===== `match` 
 
   * Value type is <<string,string>>
-  * Default value is `{}`
+  * Default value is `nil`
 
-Add description here
+A string that defines the mapping of _where to look_ of the JWT token. 
 
-[id="plugins-{type}s-{plugin}-setting_name_4"]
-===== `setting_name_4` 
+For Example, the following configuration will make the plugin understand that JWT token to decode for resides in key denoted by `token` in the event
+[source,ruby]
+    filter {
+      jwt-decode {
+        match => "token"
+      }
+    }
 
-  * Value type is <<number,number>>
-  * Default value is `0`
+[id="plugins-{type}s-{plugin}-extract_fields"]
+===== `extract_fields` 
 
-Add description here
+  * Value type is <<hash,hash>>
+  * Default value is `nil`
 
-[id="plugins-{type}s-{plugin}-setting_name_5"]
-===== `setting_name_5` 
+Defines a hash containing the key_name of the required field which needs to be added to the event from the token against the key_name of the field in the decoded token to look out for as a value.
 
-  * Value type is <<array,array>>
-  * Default value is {}
+For example, the following configuration will allow the plugin to understand that, extract the value from the decode token against the key name `user.id` and add it to the event with key name `user_id`
+[source,ruby]
+    filter {
+      jwt-decode {
+        "extract_fields" => {"user_id" => "user.id"}
+      }
+    }
 
-Add description here
+[id="plugins-{type}s-{plugin}-key"]
+===== `key` 
+
+  * Value type is <<string,string>>
+  * Default value is `nil`
+
+Defines the Key with which the signature of the JWT token has to be verfied with. If this configuration is nil or not declared, signature validation of JWT token will be skipped
+
+[id="plugins-{type}s-{plugin}-signature_alg"]
+===== `signature_alg` 
+
+  * Value type is <<string,string>>
+  * Default value is `HS256`
+
+Defines the signature algorithm of signed JWT token.
 
 // The full list of Value Types is here: 
 // https://www.elastic.co/guide/en/logstash/current/configuration-file-structure.html

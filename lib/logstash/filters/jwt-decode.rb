@@ -13,7 +13,7 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
   #
   # jwt-decode {
   #    "match" => "token",
-  #    "extract_fields" => {"business_id" => "user.busId"}
+  #    "extract_fields" => {"user_id" => "user.id"}
   # }    
   #   
   # 
