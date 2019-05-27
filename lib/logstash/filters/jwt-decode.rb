@@ -22,8 +22,8 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
 
   # Looks for a match in message which contains the token field
   config :match, :validate => :string, :required => true
-  # Supported Algorithms NONE, HMAC, RSASSA and ECDSA
-  config :signature_alg, :validate => :string, :required => false, :default => "NONE"
+  # Valid algorithms are defined here https://tools.ietf.org/html/rfc7518#section-3.1
+  config :signature_alg, :validate => :string, :required => false, :default => "HS256"
   config :key, :validate => :string, :required => false, :default => nil
   config :extract_fields, :validate => :hash, :required => true
 
@@ -31,14 +31,19 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
   public
   def register
     # Add instance variables
-    if not ['NONE', 'HMAC', 'RSASSA', 'ECDSA'].include? @signature_alg
-      raise LogStash::ConfigurationError, "JWTDecode plugin: Invalid signature_alg '#{@signature_alg}' must be one of NONE, HMAC, RSASSA and ECDSA"
+    if @key && !@signature_alg
+      raise LogStash::ConfigurationError, "signature_alg has to be specified if key is present "
     end  
   end # def register
 
   public
   def filter(event)
-    decoded_token = JWT.decode event.get(@match), @key, false, {algorithm: @signature_alg}    
+    if not @key
+      decoded_token = JWT.decode event.get(@match), nil, false
+    else
+      decoded_token = JWT.decode event.get(@match), @key, true, {algorithm: @signature_alg}    
+    end
+
     @extract_fields.each do |k, v| 
       event.set(k , getValueFromDecodedToken(v, decoded_token[0]))
     end
