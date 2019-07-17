@@ -21,11 +21,11 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
   config_name "jwt-decode"
 
   # Looks for a match in message which contains the token field
-  config :match, :validate => :string, :required => true
+  config :match, :validate => :string
   # Valid algorithms are defined here https://tools.ietf.org/html/rfc7518#section-3.1
-  config :signature_alg, :validate => :string, :required => false, :default => "HS256"
-  config :key, :validate => :string, :required => false, :default => nil
-  config :extract_fields, :validate => :hash, :required => true
+  config :signature_alg, :validate => :string, :default => "HS256"
+  config :key, :validate => :string, :default => nil
+  config :extract_fields, :validate => :hash
 
 
   public
