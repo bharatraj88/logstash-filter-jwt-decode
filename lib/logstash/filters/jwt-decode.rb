@@ -1,5 +1,6 @@
 # encoding: utf-8
 require "logstash/filters/base"
+require "logstash/namespace"
 require "jwt"
 
 # This  filter will decode the jwt token in your message event and retrievs the values

@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'logstash-filter-jwt-decode'
-  s.version       = '0.2.0'
+  s.version       = '0.3.0'
   s.licenses      = ['Apache-2.0']
   s.summary       = 'Logstash filter plugin for decoding JSON Web Token (JWT)'
   s.description   = 'Logstash filter plugin for decoding JSON Web Token (JWT)'
