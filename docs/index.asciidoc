@@ -1,4 +1,4 @@
-:plugin: jwt-decode
+:plugin: jwtdecode
 :type: filter
 // Update header with plugin name
 
@@ -21,18 +21,18 @@ include::{include_path}/plugin_header.asciidoc[]
 
 ==== Description
 
-This jwt-decode filter plugin allows you to decode JWT token present in your event, extract the varaibles which you need and add it to event
+This jwtdecode filter plugin allows you to decode JWT token present in your event, extract the varaibles which you need and add it to event
 
 Example:
 [source,ruby]
 -----
 filter {
-    jwt-decode {
+    jwtdecode {
         match => "token"
         "extract_fields" => {"user_id" => "user.id", "user_name" => "user.name"}
     }
 
-    jwt-decode {
+    jwtdecode {
         match => "token"
         "extract_fields" => {"name" => "name"}
     }
@@ -66,7 +66,7 @@ A string that defines the mapping of _where to look_ of the JWT token.
 For Example, the following configuration will make the plugin understand that JWT token to decode for resides in key denoted by `token` in the event
 [source,ruby]
     filter {
-      jwt-decode {
+      jwtdecode {
         match => "token"
       }
     }
@@ -82,7 +82,7 @@ Defines a hash containing the key_name of the required field which needs to be a
 For example, the following configuration will allow the plugin to understand that, extract the value from the decode token against the key name `user.id` and add it to the event with key name `user_id`
 [source,ruby]
     filter {
-      jwt-decode {
+      jwtdecode {
         "extract_fields" => {"user_id" => "user.id"}
       }
     }

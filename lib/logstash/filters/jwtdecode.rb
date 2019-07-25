@@ -12,21 +12,21 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
   # Setting the config_name here is required. This is how you
   # configure this filter from your Logstash config.
   #
-  # jwt-decode {
+  # jwtdecode {
   #    "match" => "token",
   #    "extract_fields" => {"user_id" => "user.id"}
   # }    
   #   
   # 
   #
-  config_name "jwt-decode"
+  config_name "jwtdecode"
 
   # Looks for a match in message which contains the token field
-  config :match, :validate => :string
+  config :match, :validate => :string, :required => true
   # Valid algorithms are defined here https://tools.ietf.org/html/rfc7518#section-3.1
-  config :signature_alg, :validate => :string, :default => "HS256"
-  config :key, :validate => :string, :default => nil
-  config :extract_fields, :validate => :hash
+  config :signature_alg, :validate => :string, :required => false, :default => "HS256"
+  config :key, :validate => :string, :required => false, :default => nil
+  config :extract_fields, :validate => :hash, :required => true
 
 
   public
@@ -62,4 +62,4 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
     end
     return decoded_token;   
   end
-end # class LogStash::Filters::JWTDecode
+end # class LogStash::Filters::jwtdecode

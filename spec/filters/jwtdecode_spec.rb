@@ -1,6 +1,6 @@
 # encoding: utf-8
 require_relative '../spec_helper'
-require "logstash/filters/jwt-decode"
+require "logstash/filters/jwtdecode"
 require "jwt"
 
 describe LogStash::Filters::JWTDecode do
