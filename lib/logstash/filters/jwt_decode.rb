@@ -17,7 +17,8 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
   #    "extract_fields" => {"user_id" => "user.id"}
   # }    
   #   
-  # 
+  # Incase if there is any error during decoding, populates
+  # `JWT_PARSER_ERROR` in the event with the corresponding error
   #
   config_name "jwt_decode"
 
@@ -51,6 +52,8 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
       end
     rescue JWT::ExpiredSignature
       event.set("JWT_PARSER_ERROR","ExpiredSignature")
+    rescue JWT::VerificationError
+      event.set("JWT_PARSER_ERROR","VerificationError")  
     rescue JWT::ImmatureSignature
       event.set("JWT_PARSER_ERROR","ImmatureSignature")
     rescue JWT::InvalidIssuerError
@@ -63,8 +66,6 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
       event.set("JWT_PARSER_ERROR","InvalidIatError")
     rescue JWT::InvalidSubError
       event.set("JWT_PARSER_ERROR","InvalidSubError")
-    rescue JWT::JWKError
-      event.set("JWT_PARSER_ERROR","JWKError")
     rescue JWT::DecodeError  
       event.set("JWT_PARSER_ERROR","DecodeError")
     end  

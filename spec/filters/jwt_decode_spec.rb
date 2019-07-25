@@ -40,8 +40,7 @@ describe LogStash::Filters::JWTDecode do
     end
 
     describe " Invalid Key" do
-      it "Expect JWT::VerificationError" do
-        expect{
+      it "Expect VerificationError" do
         filter = setup_filter({
           "match" => "token",
           "extract_fields" => {"name" => "user.name", "id" => "user.id"},
@@ -50,7 +49,7 @@ describe LogStash::Filters::JWTDecode do
         })
         event = start_event({"token" => "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjp7Im5hbWUiOiJ0ZXN0TmFtZSIsImlkIjo0fX0.5fs1Ghwm9rtN2GaB66bhTLbYrEAuBxh4s46uOyX6Zos"})
         filter.filter(event)
-        }.to raise_error(JWT::VerificationError)
+        expect(event.get("JWT_PARSER_ERROR")).to eq("VerificationError")
       end
     end
 
