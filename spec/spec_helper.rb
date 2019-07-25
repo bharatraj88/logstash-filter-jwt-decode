@@ -1,6 +1,6 @@
 # encoding: utf-8
 require "logstash/devutils/rspec/spec_helper"
-require "logstash/filters/jwtdecode"
+require "logstash/filters/jwt_decode"
 
 def event(data = {})
 	LogStash::Event.new(data)

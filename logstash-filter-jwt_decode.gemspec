@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
-  s.name          = 'logstash-filter-jwtdecode'
+  s.name          = 'logstash-filter-jwt_decode'
   s.version       = '1.0.0'
   s.licenses      = ['Apache-2.0']
   s.summary       = 'Logstash filter plugin for decoding JSON Web Token (JWT)'
   s.description   = 'Logstash filter plugin for decoding JSON Web Token (JWT)'
-  s.homepage      = 'https://github.com/bharatraj88/logstash-filter-jwtdecode'
+  s.homepage      = 'https://github.com/bharatraj88/logstash-filter-jwt_decode'
   s.authors       = ['Bharat Raj Arutla']
   s.email         = 'bharatraj.arutla@gmail.com'
   s.require_paths = ['lib']

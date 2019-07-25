@@ -12,14 +12,14 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
   # Setting the config_name here is required. This is how you
   # configure this filter from your Logstash config.
   #
-  # jwtdecode {
+  # jwt_decode {
   #    "match" => "token",
   #    "extract_fields" => {"user_id" => "user.id"}
   # }    
   #   
   # 
   #
-  config_name "jwtdecode"
+  config_name "jwt_decode"
 
   # Looks for a match in message which contains the token field
   config :match, :validate => :string, :required => true
@@ -39,15 +39,35 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
 
   public
   def filter(event)
-    if not @key
-      decoded_token = JWT.decode event.get(@match), nil, false
-    else
-      decoded_token = JWT.decode event.get(@match), @key, true, {algorithm: @signature_alg}    
-    end
+    begin 
+      if not @key
+        decoded_token = JWT.decode event.get(@match), nil, false
+      else
+        decoded_token = JWT.decode event.get(@match), @key, true, {algorithm: @signature_alg}    
+      end
 
-    @extract_fields.each do |k, v| 
-      event.set(k , getValueFromDecodedToken(v, decoded_token[0]))
-    end
+      @extract_fields.each do |k, v| 
+        event.set(k , getValueFromDecodedToken(v, decoded_token[0]))
+      end
+    rescue JWT::ExpiredSignature
+      event.set("JWT_PARSER_ERROR","ExpiredSignature")
+    rescue JWT::ImmatureSignature
+      event.set("JWT_PARSER_ERROR","ImmatureSignature")
+    rescue JWT::InvalidIssuerError
+      event.set("JWT_PARSER_ERROR","InvalidIssuerError")
+    rescue JWT::InvalidAudError
+      event.set("JWT_PARSER_ERROR","InvalidAudError")
+    rescue JWT::InvalidJtiError
+      event.set("JWT_PARSER_ERROR","InvalidJtiError")
+    rescue JWT::InvalidIatError
+      event.set("JWT_PARSER_ERROR","InvalidIatError")
+    rescue JWT::InvalidSubError
+      event.set("JWT_PARSER_ERROR","InvalidSubError")
+    rescue JWT::JWKError
+      event.set("JWT_PARSER_ERROR","JWKError")
+    rescue JWT::DecodeError  
+      event.set("JWT_PARSER_ERROR","DecodeError")
+    end  
     # filter_matched should go in the last line of our successful code
     filter_matched(event)
   end # def filter
@@ -62,4 +82,4 @@ class LogStash::Filters::JWTDecode < LogStash::Filters::Base
     end
     return decoded_token;   
   end
-end # class LogStash::Filters::jwtdecode
+end # class LogStash::Filters::jwt_decode
